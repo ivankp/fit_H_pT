@@ -3,5 +3,6 @@
 !.gitignore
 !Makefile
 !fit.cc
+!draw.cc
 
 **.swp
