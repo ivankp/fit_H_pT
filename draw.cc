@@ -23,7 +23,9 @@ extern "C" void run(std::vector<TObject*>& objs, std::vector<TH1*>& hs) {
   unsigned hi = 0;
 
   for (TH1* h : hs) {
-    const TF1 *f = (TF1*)h->GetListOfFunctions()->At(0);
+    TF1 *f = (TF1*)h->GetListOfFunctions()->At(0);
+    f->SetLineWidth(1);
+    f->SetLineColorAlpha(1,0.7);
     const unsigned np = f->GetNpar();
     const auto* p = f->GetParameters();
 
