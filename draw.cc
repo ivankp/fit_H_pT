@@ -34,10 +34,10 @@ extern "C" void run(std::vector<TObject*>& objs, std::vector<TH1*>& hs) {
     for (unsigned i=1; i<np; ++i)
       ss << "  " << p[i];
 
-    TText *text = new TText(0.14,0.28-0.03*hi,ss.str().c_str());
+    TText *text = new TText(0.13,0.21-0.035*hi,ss.str().c_str());
     text->SetNDC();
     text->SetTextFont(82);
-    text->SetTextSize(0.03);
+    text->SetTextSize(0.04);
     objs.push_back(text);
     ++hi;
   }
