@@ -24,6 +24,18 @@ TF1* get_fit(TH1* h) {
 extern "C" void init(const std::string& args) { }
 
 extern "C" void run(std::vector<TObject*>& objs, std::vector<TH1*>& hs) {
+  { // fake values below jet pT cut (LO histograms don't have those)
+    double xs0 = 0, xs1 = 0;
+    for (int i=8; i<15; ++i) {
+      xs0 += hs[0]->GetBinContent(i);
+      xs1 += hs[1]->GetBinContent(i);
+    }
+    xs0 /= xs1;
+    for (int i=1; i<7; ++i) {
+      hs[0]->SetBinContent(i,hs[1]->GetBinContent(i)*xs0);
+    }
+  }
+
   unsigned hi = 0;
   for (TH1* h : hs) {
     TF1 *f = get_fit(h);
@@ -47,13 +59,13 @@ extern "C" void run(std::vector<TObject*>& objs, std::vector<TH1*>& hs) {
   }
   hi = 0;
 
-  { TF1 *f0 = get_fit(hs[0]), *f1 = get_fit(hs[1]);
+  { TF1 *f0 = get_fit(hs[1]), *f1 = get_fit(hs[0]);
     const double
       A = f0->GetParameter(0) - f1->GetParameter(0),
       B = f0->GetParameter(1) - f1->GetParameter(1),
       C = f0->GetParameter(2) - f1->GetParameter(2);
 
-    for (double r : {2., 10.}) {
+    for (const double r : {2., 10.}) {
       const double logr = std::log(r);
       const double E = std::exp((-B+std::sqrt(B*B-4.*C*(A-logr)))/(2.*C));
       std::stringstream ss;

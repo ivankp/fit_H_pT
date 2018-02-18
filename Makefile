@@ -10,17 +10,17 @@ all: pT_yy.pdf
 # https://twiki.cern.ch/twiki/bin/view/LHCPhysics/CERNYellowReportPageBR
 
 pT_yy.pdf: fit.so draw.so Makefile $(shell which hed)
-	hed H1j_NLO.root H1j_B.root H1j_B_mtop.root AA1j_NLO.root -o $@ \
+	hed H1j_B_mtop.root H1j_NLO.root H1j_B.root AA1j_NLO.root -o $@ \
 	  -e 's/^(pT_yy).*/\1/' \
 	     'sd:with_photon_cuts/all::' \
 	     'f:.*/::' 'f/^H/{ sn/pT_yy$$/; scale 2.270E-03 }' \
 	     'scale 1e3 width' \
 	     'fl/([^_]+).*/\1 /' 'f/mtop/{l+//mtop/}' \
 	     'nl+/^pT_yy_?//' \
-	     'l/^H/[H#rightarrowAA]/' \
+	     'l/^H/[H#rightarrowAA]/{ if/mtop/{l+//EFT/} }' \
 	     'l/(\dj)/+\1/' 'l/(\d+)_(\d+)/m_{#lower[-0.3]{AA}}#in#kern[0.6]{[}\1,\2]/' \
 	     'l/AA/#gamma#gamma/' \
-	  -g 'div 2 1' 'mult 2 0' 'rm 1' \
+	  -g 'div 0 2' 'mult 0 1' 'rm 2' \
 	     'margin 0.1:0.1:0.04:0.1' 'rat 0.3 width' \
 	     'log y' 'leg 0.71:0.70:0.96:0.9' \
 	     't//Diphoton pT @ NLO + #gamma cuts/' \
@@ -32,7 +32,7 @@ pT_yy.pdf: fit.so draw.so Makefile $(shell which hed)
 	     'load ./draw.so' \
 	     'tex 60:1.3e-4 y=exp(A+Blogx+Clog^{2}x) 12 1.0' \
 	     'pad 2' 'log y' \
-	  --colors 602 64 46 8 94 -vc
+	  --colors 64 602 46 8 94 -vc
 
 %.so: %.cc
 	g++ -std=c++14 -Wall -O3 -fPIC $(ROOT_CXXFLAGS) $< -shared -o $@ $(ROOT_LIBS)
