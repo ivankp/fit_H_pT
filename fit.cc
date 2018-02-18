@@ -49,7 +49,7 @@ void fchi2_wrap(
   fval = fchi2(par);
 }
 
-extern "C" void run(TH1* h) {
+void run_fit(TH1* h) {
   cout << "Fitting " << h->GetName()
        << " on [" << range[0] <<','<< range[1] <<']' << endl;
 
@@ -111,4 +111,8 @@ extern "C" void run(TH1* h) {
 
   TEST( chi2_min )
   TEST( TMath::Prob(chi2_min,npar) )
+}
+
+extern "C" void run(std::vector<TObject*>& objs, std::vector<TH1*>& hs) {
+  for (TH1* h : hs) run_fit(h);
 }
