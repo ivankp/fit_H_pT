@@ -49,11 +49,11 @@ extern "C" void run(std::vector<TObject*>& objs, std::vector<TH1*>& hs) {
     for (unsigned i=1; i<np; ++i)
       ss << "  " << p[i];
 
-    TText *text = new TText(0.13,0.21-0.035*hi,ss.str().c_str());
+    TText *text = new TText(0.13,0.23-0.035*hi,ss.str().c_str());
     // 0.14,0.28-0.03*hi
     text->SetNDC();
     text->SetTextFont(82);
-    text->SetTextSize(0.04); // 0.03
+    text->SetTextSize(0.035); // 0.03
     objs.push_back(text);
     ++hi;
   }

@@ -3,7 +3,9 @@ SHELL = bash
 ROOT_CXXFLAGS := $(shell root-config --cflags | sed 's/ -std=c++[^ ]\+ / /')
 ROOT_LIBS     := $(shell root-config --libs) -lMinuit
 
-.PHONY: all clean
+T3 := ivanp@alpheus.aglt2.org:/home/ivanp/work/bh_analysis2
+
+.PHONY: all clean scp
 
 all: pT_yy.pdf
 
@@ -30,12 +32,17 @@ pT_yy.pdf: fit.so draw.so Makefile $(shell which hed)
 	     'tex 750:0.07 H#rightarrow#gamma#gamma#kern[0.4]{B}R:#kern[0.4]{2}.27#times10^{#minus3} 12 1' \
 	     'load ./fit.so 150:1000' \
 	     'load ./draw.so' \
-	     'tex 60:1.3e-4 y=exp(A+Blogx+Clog^{2}x) 12 1.0' \
+	     'tex 60:2.1e-4 y=exp(A+Blogx+Clog^{2}x) 12 0.9' \
 	     'pad 2' 'log y' \
-	  --colors 64 602 46 8 94 -vc
+	  --colors 64 602 93 94 95 96 97 98 99 -vc
 
 %.so: %.cc
 	g++ -std=c++14 -Wall -O3 -fPIC $(ROOT_CXXFLAGS) $< -shared -o $@ $(ROOT_LIBS)
+
+scp:
+	@scp $(T3)/hgam_sb/merged/{{H,AA}1j_NLO,H1j_B_norm}.root .
+	@scp $(T3)/hgam_mtop/H1j_B_mtop.root .
+	@mv H1j_B_norm.root H1j_B.root
 
 clean:
 	@rm -vf fit.so draw.so
